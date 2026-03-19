@@ -1,0 +1,1351 @@
+{
+  "name": "invoice inbox automation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            },
+            {}
+          ]
+        },
+        "simple": false,
+        "filters": {
+          "q": "subject:invoice OR subject:billing"
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1040,
+        416
+      ],
+      "id": "629ad18e-5bc3-44b4-90a2-58efdd0acbe4",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "77MD3iIHM998Xf1Q",
+          "name": "Abdulkareem gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "fed76622-ceda-40c2-a73b-2a82cc567922",
+              "leftValue": "=={{ $json.skip }}",
+              "rightValue": "false",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -592,
+        416
+      ],
+      "id": "e879462c-2bea-45c5-a15d-840100848a80",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y",
+          "mode": "list",
+          "cachedResultName": "test spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "due date": "={{ $json.output['Due Date'] }}",
+            "invoice number": "={{ $json.output[' Invoice Number'] }}",
+            "vendor name": "={{ $json.output['vendor name'] }}",
+            "invoice date": "={{ $json.output['Invoice Date'] }}",
+            "total amount": "={{ $json.output['Total Amount'] }}",
+            "invoice description": "={{ $json.output['Invoice Description'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "invoice number",
+              "displayName": "invoice number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor name",
+              "displayName": "vendor name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice date",
+              "displayName": "invoice date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due date",
+              "displayName": "due date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total amount",
+              "displayName": "total amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice description",
+              "displayName": "invoice description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        272,
+        560
+      ],
+      "id": "82772cb0-6b7f-4dbf-8b7e-3a83fe342f27",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwyWPXmtbp5kSClU",
+          "name": "Abdulkareem google sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "={{ $binary[\"attachment_0\"] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        128
+      ],
+      "id": "7f2c8504-40f6-4b67-bde9-e3178ae596b2",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "3ad8649d-2279-47de-8f16-60e8f59e3d94",
+              "leftValue": "={{ $json.text }}",
+              "rightValue": "description",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "8c832e0b-2cfd-4259-b3fb-92051df1b280",
+              "leftValue": "={{ $json.text }}",
+              "rightValue": "date",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "4634e716-831f-4d12-8b41-59aa9e19b78d",
+              "leftValue": "={{ $json.text }}",
+              "rightValue": "total",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        304,
+        128
+      ],
+      "id": "6f1cf369-347c-46b3-9eda-b2006ecba84f",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "operation": "Upload File to PDF.co",
+        "binaryData": true,
+        "binaryPropertyName": "attachment_0",
+        "name": "={{ $binary.attachment_0.fileName }}"
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        592,
+        272
+      ],
+      "id": "8cc25509-2fa1-4525-bd4e-501c0e0340e4",
+      "name": "PDFco Api",
+      "credentials": {
+        "pdfcoApi": {
+          "id": "BGgoV0bMHRSiXYVl",
+          "name": "Abdulkareem PDF.co"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "advancedOptions": {}
+      },
+      "type": "n8n-nodes-pdfco.PDFco Api",
+      "typeVersion": 1,
+      "position": [
+        880,
+        272
+      ],
+      "id": "b09cd02f-5d26-4734-8e36-17e837d28993",
+      "name": "PDFco Api1",
+      "credentials": {
+        "pdfcoApi": {
+          "id": "BGgoV0bMHRSiXYVl",
+          "name": "Abdulkareem PDF.co"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y",
+          "mode": "list",
+          "cachedResultName": "test spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "vendor name": "={{ $('Information Extractor').item.json.output['vendor name'] }}",
+            "invoice number": "={{ $('Information Extractor').item.json.output[' Invoice Number'] }}",
+            "invoice date": "={{ $('Information Extractor').item.json.output['Invoice Date'] }}",
+            "due date": "={{ $('Information Extractor').item.json.output['Due Date'] }}",
+            "total amount": "={{ $('Information Extractor').item.json.output['Total Amount'] }}",
+            "invoice description": "={{ $('Information Extractor').item.json.output['Invoice Description'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "invoice number",
+              "displayName": "invoice number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor name",
+              "displayName": "vendor name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice date",
+              "displayName": "invoice date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due date",
+              "displayName": "due date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total amount",
+              "displayName": "total amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice description",
+              "displayName": "invoice description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1696,
+        256
+      ],
+      "id": "7df10e92-92b7-44cc-ba87-7179d4036206",
+      "name": "Append row in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwyWPXmtbp5kSClU",
+          "name": "Abdulkareem google sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y",
+          "mode": "list",
+          "cachedResultName": "test spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "invoice number": "={{ $('Information Extractor1').item.json.output[' Invoice Number'] }}",
+            "invoice description": "={{ $('Information Extractor1').item.json.output['Invoice Description'] }}",
+            "vendor name": "={{ $('Information Extractor1').item.json.output['vendor name'] }}",
+            "invoice date": "={{ $('Information Extractor1').item.json.output['Invoice Date'] }}",
+            "due date": "={{ $('Information Extractor1').item.json.output['Due Date'] }}",
+            "total amount": "={{ $('Information Extractor1').item.json.output['Total Amount'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "invoice number",
+              "displayName": "invoice number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "vendor name",
+              "displayName": "vendor name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice date",
+              "displayName": "invoice date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "due date",
+              "displayName": "due date",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "total amount",
+              "displayName": "total amount",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "invoice description",
+              "displayName": "invoice description",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1200,
+        -240
+      ],
+      "id": "f6094119-caca-4f27-9523-757dd7a4d95e",
+      "name": "Append row in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwyWPXmtbp5kSClU",
+          "name": "Abdulkareem google sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "=vendor name",
+              "description": "always return the name of the person requesting payment. not the person the invoice is sent to. be accurate about this",
+              "required": true
+            },
+            {
+              "name": " Invoice Number",
+              "description": "invoice number",
+              "required": true
+            },
+            {
+              "name": "Invoice Date",
+              "description": " Invoice Date, always return a dd-mmm-yy format",
+              "required": true
+            },
+            {
+              "name": "Due Date",
+              "description": "date the invoice is vaid to, calculate the date accurately if it was given in days, months or hours always return a dd-mmm-yy format",
+              "required": true
+            },
+            {
+              "name": "Total Amount",
+              "description": "The total amount to be paid on the invoive. Include the currency always in the folowing format e.g $600, £259, $1,235",
+              "required": true
+            },
+            {
+              "name": "Invoice Description",
+              "description": "short summary of what the invoice is for",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        560,
+        -224
+      ],
+      "id": "4bcc07de-58b9-475f-b7c4-11f59f00806e",
+      "name": "Information Extractor1"
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.body.toJsonString() }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "=vendor name",
+              "description": "name of the vendor, the vendor is the person issuing the invoice and requesting payment.",
+              "required": true
+            },
+            {
+              "name": " Invoice Number",
+              "description": "invoice number",
+              "required": true
+            },
+            {
+              "name": "Invoice Date",
+              "description": " Invoice Date, always return a dd-mmm-yy format",
+              "required": true
+            },
+            {
+              "name": "Due Date",
+              "description": "date the invoice is vaid to, calculate the date accurately if it was given in days, months or hours always return a dd-mmm-yy format",
+              "required": true
+            },
+            {
+              "name": "Total Amount",
+              "description": "The total amount to be paid on the invoive. Include the currency always in the folowing format e.g $600, £259, $1,235",
+              "required": true
+            },
+            {
+              "name": "Invoice Description",
+              "description": "short summary of what the invoice is for",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1104,
+        272
+      ],
+      "id": "0e949938-aea0-4063-b442-f7dba7e27360",
+      "name": "Information Extractor",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000
+    },
+    {
+      "parameters": {
+        "text": "={{ $json.text }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "=vendor name",
+              "description": "always return the name of the person requesting payment. not the person the invoice is sent to. be accurate about this",
+              "required": true
+            },
+            {
+              "name": " Invoice Number",
+              "description": "invoice number",
+              "required": true
+            },
+            {
+              "name": "Invoice Date",
+              "description": " Invoice Date, always return a dd-mmm-yy format",
+              "required": true
+            },
+            {
+              "name": "Due Date",
+              "description": "date the invoice is vaid to, calculate the date accurately if it was given in days, months or hours always return a dd-mmm-yy format",
+              "required": true
+            },
+            {
+              "name": "Total Amount",
+              "description": "The total amount to be paid on the invoive. Include the currency always in the folowing format e.g $600, £259, $1,235",
+              "required": true
+            },
+            {
+              "name": "Invoice Description",
+              "description": "short summary of what the invoice is for",
+              "required": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        -384,
+        576
+      ],
+      "id": "351648b4-50e2-4908-8e62-c561e7bbe6ec",
+      "name": "Information Extractor2"
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {
+          "responseFormat": "json_object"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        608,
+        32
+      ],
+      "id": "3bb6ae24-1c12-48fb-a751-f33fcb69a260",
+      "name": "OpenRouter Chat Model",
+      "credentials": {
+        "openRouterApi": {
+          "id": "1mt04hz7iDOFDJwI",
+          "name": "Abdulkareem OpenRouter"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        -320,
+        800
+      ],
+      "id": "ad7c9ac0-3687-4906-87f0-638cb6d44ce3",
+      "name": "OpenRouter Chat Model1",
+      "credentials": {
+        "openRouterApi": {
+          "id": "1mt04hz7iDOFDJwI",
+          "name": "Abdulkareem OpenRouter"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "openrouter/free",
+        "options": {
+          "responseFormat": "json_object"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenRouter",
+      "typeVersion": 1,
+      "position": [
+        1168,
+        432
+      ],
+      "id": "438ec1a4-9702-4647-8bb2-027495fd6c4f",
+      "name": "OpenRouter Chat Model2",
+      "retryOnFail": true,
+      "waitBetweenTries": 5000,
+      "credentials": {
+        "openRouterApi": {
+          "id": "1mt04hz7iDOFDJwI",
+          "name": "Abdulkareem OpenRouter"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "return items.flatMap(item => {\n  const binaries = item.binary || {};\n  const keys = Object.keys(binaries);\n\n  // No attachments? Return single item with skip flag\n  if (keys.length === 0) {\n    return [{\n      json: {\n        ...item.json,\n        error: \"No attachment found\",\n        skip: true\n      }\n    }];\n  }\n\n  // Create a new item for each attachment\n  return keys.map(key => ({\n    json: {\n      ...item.json,\n      attachmentKey: key,\n      skip: false\n    },\n    binary: {\n      attachment_0: binaries[key] // everything goes under attachment_0\n    }\n  }));\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -816,
+        416
+      ],
+      "id": "25919377-6e63-4fd1-9366-1cc13f38911a",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -192,
+        112
+      ],
+      "id": "d5f632e6-487b-4d83-9259-1987c3b52f71",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y",
+          "mode": "list",
+          "cachedResultName": "test spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "invoice number",
+              "lookupValue": "={{ $json.output[' Invoice Number'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        848,
+        -224
+      ],
+      "id": "7074745e-afab-4190-b79b-70b462e5a777",
+      "name": "Get row(s) in sheet",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwyWPXmtbp5kSClU",
+          "name": "Abdulkareem google sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d78195f7-8a92-4952-9cf6-cda666b68cf8",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        976,
+        -224
+      ],
+      "id": "690a7916-5dea-46f5-9896-5afa871fd3fb",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y",
+          "mode": "list",
+          "cachedResultName": "test spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "invoice number",
+              "lookupValue": "={{ $json.output[' Invoice Number'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1360,
+        272
+      ],
+      "id": "9ef3da18-2c94-4d1f-b27b-059fc1da9ad3",
+      "name": "Get row(s) in sheet1",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwyWPXmtbp5kSClU",
+          "name": "Abdulkareem google sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d78195f7-8a92-4952-9cf6-cda666b68cf8",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1488,
+        272
+      ],
+      "id": "f57999b4-f529-48e3-ad40-729785227acd",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y",
+          "mode": "list",
+          "cachedResultName": "test spreadsheet",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1--mAJm4YI7c-DZnyqgIdVtXjfjMCEJRgWhi4pOWi8_Y/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "invoice number",
+              "lookupValue": "={{ $json.output[' Invoice Number'] }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -112,
+        576
+      ],
+      "id": "f9cdb1bb-068b-4d25-b1e2-8b0b149fb3ac",
+      "name": "Get row(s) in sheet2",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwyWPXmtbp5kSClU",
+          "name": "Abdulkareem google sheet"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "d78195f7-8a92-4952-9cf6-cda666b68cf8",
+              "leftValue": "={{ $json }}",
+              "rightValue": "",
+              "operator": {
+                "type": "object",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        48,
+        576
+      ],
+      "id": "c7addabe-9856-47c9-86c8-bdfb4ed9eabc",
+      "name": "If4"
+    }
+  ],
+  "pinData": {
+    "Gmail Trigger": [
+      {
+        "json": {
+          "id": "19cf94b0f26e0704",
+          "threadId": "19ccb610dfaa3d1d",
+          "labelIds": [
+            "UNREAD",
+            "IMPORTANT",
+            "SENT",
+            "INBOX"
+          ],
+          "sizeEstimate": 431652,
+          "headers": {
+            "mime-version": "MIME-Version: 1.0",
+            "date": "Date: Tue, 17 Mar 2026 01:56:04 +0100",
+            "message-id": "Message-ID: <CAEL57840RUteaaUSuBTdEAZfLTw=P_SFtDc9GCOv+hxgqhhROg@mail.gmail.com>",
+            "subject": "Subject: invoice",
+            "from": "From: Hajara Abdulkareem <abdulkareemhajara8@gmail.com>",
+            "to": "To: Hajara Abdulkareem <abdulkareemhajara8@gmail.com>",
+            "content-type": "Content-Type: multipart/mixed; boundary=\"0000000000002ce7e6064d2dcdb8\""
+          },
+          "html": "<div dir=\"ltr\"><div dir=\"auto\"></div>\n</div>\n",
+          "text": "\n",
+          "textAsHtml": "<p></p>",
+          "subject": "invoice",
+          "date": "2026-03-17T00:56:04.000Z",
+          "to": {
+            "value": [
+              {
+                "address": "abdulkareemhajara8@gmail.com",
+                "name": "Hajara Abdulkareem"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Hajara Abdulkareem</span> &lt;<a href=\"mailto:abdulkareemhajara8@gmail.com\" class=\"mp_address_email\">abdulkareemhajara8@gmail.com</a>&gt;</span>",
+            "text": "\"Hajara Abdulkareem\" <abdulkareemhajara8@gmail.com>"
+          },
+          "from": {
+            "value": [
+              {
+                "address": "abdulkareemhajara8@gmail.com",
+                "name": "Hajara Abdulkareem"
+              }
+            ],
+            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Hajara Abdulkareem</span> &lt;<a href=\"mailto:abdulkareemhajara8@gmail.com\" class=\"mp_address_email\">abdulkareemhajara8@gmail.com</a>&gt;</span>",
+            "text": "\"Hajara Abdulkareem\" <abdulkareemhajara8@gmail.com>"
+          },
+          "messageId": "<CAEL57840RUteaaUSuBTdEAZfLTw=P_SFtDc9GCOv+hxgqhhROg@mail.gmail.com>"
+        },
+        "binary": {
+          "attachment_0": {
+            "mimeType": "application/pdf",
+            "fileType": "pdf",
+            "fileExtension": "pdf",
+            "data": "filesystem-v2",
+            "fileName": "2 invoice sample.pdf",
+            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/688136d2-a3ee-4d35-9f91-40a81e569b30",
+            "fileSize": "70.5 kB",
+            "bytes": 70453
+          },
+          "attachment_1": {
+            "mimeType": "application/pdf",
+            "fileType": "pdf",
+            "fileExtension": "pdf",
+            "data": "filesystem-v2",
+            "fileName": "sample_invoice_test.pdf",
+            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/2fe994f1-28e7-44f0-93e0-3a9068ac6c7a",
+            "fileSize": "2.48 kB",
+            "bytes": 2483
+          },
+          "attachment_2": {
+            "mimeType": "application/pdf",
+            "fileType": "pdf",
+            "fileExtension": "pdf",
+            "data": "filesystem-v2",
+            "fileName": "November Invoice - Abubakri Bello (1) (1).pdf",
+            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/7ef0df25-40d6-4386-9b97-ee0d7e4562ae",
+            "fileSize": "70.4 kB",
+            "bytes": 70376
+          },
+          "attachment_3": {
+            "mimeType": "application/pdf",
+            "fileType": "pdf",
+            "fileExtension": "pdf",
+            "data": "filesystem-v2",
+            "fileName": "1st Invoice Sample (1).pdf",
+            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/4d5928e1-996b-462e-84d9-34e5c6692c7e",
+            "fileSize": "171 kB",
+            "bytes": 170794
+          }
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Information Extractor2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "PDFco Api",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDFco Api": {
+      "main": [
+        [
+          {
+            "node": "PDFco Api1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PDFco Api1": {
+      "main": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Information Extractor2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor2",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenRouter Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Information Extractor",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Append row in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Append row in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "38e6e0ff-a45e-4e91-836d-51115217ee83",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "704622d319e7ed7caa8f04c4398ea1779abb4352ebb45a47aa175be31e8fb8d4"
+  },
+  "id": "z159jYrndPFcOLpa",
+  "tags": [
+    {
+      "updatedAt": "2026-03-16T12:05:47.984Z",
+      "createdAt": "2026-03-16T12:05:47.984Z",
+      "id": "asr17SFIuUZMsPu4",
+      "name": "Invoice Inbox Automatio"
+    }
+  ]
+}
