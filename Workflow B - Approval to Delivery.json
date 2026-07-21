@@ -1,0 +1,1038 @@
+{
+  "name": "Workflow B - Approval to Delivery",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        0,
+        0
+      ],
+      "id": "e7257367-44ca-4260-b422-f8c53536b4dd",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "operation": "search",
+        "base": {
+          "__rl": true,
+          "value": "app0H4MmpTT7GWBkB",
+          "mode": "list",
+          "cachedResultName": "Proposal Automation",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl38pTCWAILFlmKj",
+          "mode": "list",
+          "cachedResultName": "Proposals",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB/tbl38pTCWAILFlmKj"
+        },
+        "filterByFormula": "AND({Approved} = TRUE(), {Status} = \"Pending\")",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        208,
+        0
+      ],
+      "id": "efd6ec2f-28f3-4715-a043-f478377de584",
+      "name": "Search records",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "6QARKdeP6VDdYrlr",
+          "name": "Abdulkareem Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "app0H4MmpTT7GWBkB",
+          "mode": "list",
+          "cachedResultName": "Proposal Automation",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl38pTCWAILFlmKj",
+          "mode": "list",
+          "cachedResultName": "Proposals",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB/tbl38pTCWAILFlmKj"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Approved": true,
+            "Status": "Approved",
+            "id": "={{ $json.id }}",
+            "Client Name": "={{ $json.fields['Client Name'] }}",
+            "Company Name": "={{ $json.fields['Company Name'] }}",
+            "Needs Summary": "={{ $json.fields['Needs Summary'] }}",
+            "Goals": "={{ $json.fields.Goals }}",
+            "AI Draft JSON": "={{ $json.fields['AI Draft JSON'] }}",
+            "Client Email": "={{ $json.fields['Client Email'] }}",
+            "Project Scope": "={{ $json.fields['Project Scope'] }}",
+            "Services": "={{ $json.fields.Services }}",
+            "Timeline": "={{ $json.fields.Timeline }}",
+            "Pricing": "={{ $json.fields.Pricing }}",
+            "Salesperson Name": "={{ $json.fields['Salesperson Name'] }}",
+            "Date of Call": "={{ $json.fields['Date of Call'] }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Proposal.",
+              "displayName": "Proposal.",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Client Email",
+              "displayName": "Client Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date of Call",
+              "displayName": "Date of Call",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Salesperson Name",
+              "displayName": "Salesperson Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Needs Summary",
+              "displayName": "Needs Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Project Scope",
+              "displayName": "Project Scope",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Goals",
+              "displayName": "Goals",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Services",
+              "displayName": "Services",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Pricing",
+              "displayName": "Pricing",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "AI Draft JSON",
+              "displayName": "AI Draft JSON",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Approved",
+                  "value": "Approved"
+                },
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Sent",
+                  "value": "Sent"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Approved",
+              "displayName": "Approved",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Proposal Link",
+              "displayName": "Proposal Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date Sent",
+              "displayName": "Date Sent",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Modified",
+              "displayName": "Last Modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0b4fb434-c1e8-4dc7-ab89-7cea41b32a1f",
+      "name": "Update record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "6QARKdeP6VDdYrlr",
+          "name": "Abdulkareem Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "copy",
+        "fileId": {
+          "__rl": true,
+          "value": "1WkeWgY-lAwuJntKl9Qn8_YCS5DMu4S0qTALCekH5l4E",
+          "mode": "list",
+          "cachedResultName": "Our Proposal Template",
+          "cachedResultUrl": "https://docs.google.com/document/d/1WkeWgY-lAwuJntKl9Qn8_YCS5DMu4S0qTALCekH5l4E/edit?usp=drivesdk"
+        },
+        "name": "=Proposal - {{ $json.fields['Company Name'] }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        0,
+        176
+      ],
+      "id": "0961ce82-d946-4513-a53a-9b1c32dcefaa",
+      "name": "Copy file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rvR5USSHHrs2dz4J",
+          "name": "Abdulkareem Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "720c2e87-d3fd-4688-96d2-0a3524a8318c",
+              "name": "documentId",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "83e15b3e-b65d-4e59-8b0d-2f055e8b59df",
+              "name": "=clientName",
+              "value": "={{ $('Search records').item.json.fields['Client Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "29cb0c29-d571-4f88-8441-1fc854cd3852",
+              "name": "=salespersonName",
+              "value": "={{ $('Search records').item.json.fields['Salesperson Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "e5ab0a86-2eef-42fb-a08b-4a5258e1b87f",
+              "name": "=dateOfCall",
+              "value": "={{ DateTime.fromISO($('Search records').item.json.fields['Date of Call']).toFormat('dd LLLL yyyy') }}",
+              "type": "string"
+            },
+            {
+              "id": "af6cbc4f-402b-406c-bc6c-6f61b8fdbc0d",
+              "name": "=companyName",
+              "value": "={{ $('Search records').item.json.fields['Company Name'] }}",
+              "type": "string"
+            },
+            {
+              "id": "af7272e8-674e-4ec3-bbbc-71768bb2ceaa",
+              "name": "=needsSummary",
+              "value": "={{ $('Search records').item.json.fields['Needs Summary'] }}",
+              "type": "string"
+            },
+            {
+              "id": "77c89dfb-776a-42f5-af0c-9391197f12b7",
+              "name": "=goals",
+              "value": "={{ $('Search records').item.json.fields.Goals }}",
+              "type": "string"
+            },
+            {
+              "id": "653f6121-2ff4-4b22-9e7b-17af7d995ef3",
+              "name": "=projectScope",
+              "value": "={{ $('Search records').item.json.fields['Project Scope'] }}",
+              "type": "string"
+            },
+            {
+              "id": "91671572-1bac-4e3b-910d-e9a582738205",
+              "name": "=approach",
+              "value": "={{ $('Search records').item.json.fields['Approach'] }}",
+              "type": "string"
+            },
+            {
+              "id": "c17d533a-5e27-4bd0-ba34-b5c079fe757c",
+              "name": "=deliverables",
+              "value": "={{ $('Search records').item.json.fields.Services }}",
+              "type": "string"
+            },
+            {
+              "id": "5b7aeb51-0a68-4fea-9f1b-2db2a5e5fe49",
+              "name": "=timeline",
+              "value": "={{ $('Search records').item.json.fields.Timeline }}",
+              "type": "string"
+            },
+            {
+              "id": "eb5b256c-4b16-47b8-bb58-670f1fb7feed",
+              "name": "=pricing",
+              "value": "={{ $('Search records').item.json.fields.Pricing }}",
+              "type": "string"
+            },
+            {
+              "id": "a87c5a13-841d-4b24-9340-ed4411103604",
+              "name": "=clientEmail",
+              "value": "={{ $('Search records').item.json.fields['Client Email'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        208,
+        176
+      ],
+      "id": "da49d39e-cf88-4e2a-9815-5f8b6d879d06",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://docs.googleapis.com/v1/documents/{{ $json.documentId }}:batchUpdate",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "googleDocsOAuth2Api",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"requests\": [\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Client Name)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.clientName }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Salesperson Name)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.salespersonName }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Date of Call)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.dateOfCall }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Company Name)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.companyName }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Summary of Client's Needs)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.needsSummary }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Goals & Objectives)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.goals }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Project Scope)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.projectScope }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Description of our approach)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.approach }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Deliverables)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.deliverables }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Proposed Timeline)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.timeline }}\" } },\n    { \"replaceAllText\": { \"containsText\": { \"text\": \"(Estimated Pricing)\", \"matchCase\": true }, \"replaceText\": \"{{ $json.pricing }}\" } }\n  ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        176
+      ],
+      "id": "d6ca69b0-b4b1-40a5-b13c-f6cef67f3ed4",
+      "name": "HTTP Request",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "WwyWPXmtbp5kSClU",
+          "name": "Abdulkareem google sheet"
+        },
+        "googleOAuth2Api": {
+          "id": "3QvML7iPxbxLEJsx",
+          "name": "Google account"
+        },
+        "googleDocsOAuth2Api": {
+          "id": "U3ZkKTaQ0D0NmfrI",
+          "name": "Google Docs account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "share",
+        "fileId": {
+          "__rl": true,
+          "value": "1vHX3PiqHP0usBdUHQF2fI-FzIHliItZYRJDyLaEhaU8",
+          "mode": "list",
+          "cachedResultName": "Proposal - HajoGlobals",
+          "cachedResultUrl": "https://docs.google.com/document/d/1vHX3PiqHP0usBdUHQF2fI-FzIHliItZYRJDyLaEhaU8/edit?usp=drivesdk"
+        },
+        "permissionsUi": {
+          "permissionsValues": {
+            "role": "reader",
+            "type": "anyone"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        0,
+        352
+      ],
+      "id": "b6fc3ac9-7d45-4639-a7c0-361f726d90e2",
+      "name": "Share file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rvR5USSHHrs2dz4J",
+          "name": "Abdulkareem Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "https://docs.google.com/document/d/1GSc8rg1TfqxQpzDJwotxoLObXhhgEeCJUub14qoj9J4/edit",
+          "mode": "url"
+        },
+        "options": {
+          "googleFileConversion": {
+            "conversion": {
+              "docsToFormat": "text/plain"
+            }
+          }
+        }
+      },
+      "type": "n8n-nodes-base.googleDrive",
+      "typeVersion": 3,
+      "position": [
+        192,
+        352
+      ],
+      "id": "35c0902c-7b0a-4fb4-8e0d-0573ccdd00a5",
+      "name": "Download file",
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "rvR5USSHHrs2dz4J",
+          "name": "Abdulkareem Google Drive"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const buffer = await this.helpers.getBinaryDataBuffer(0, 'data');\nlet templateText = buffer.toString('utf-8');\n\nconst setNode = $('Edit Fields').item.json;\n\ntemplateText = templateText.replace(/\\(client name\\)/gi, setNode.clientName);\ntemplateText = templateText.replace(/\\(proposal link\\)/gi, `https://docs.google.com/document/d/${setNode.documentId}/edit`);\ntemplateText = templateText.replace(/\\(salesperson('|’)s name\\)/gi, setNode.salespersonName);\n\nreturn {\n  json: {\n    emailBody: templateText,\n    clientEmail: setNode.clientEmail,\n    companyName: setNode.companyName\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        400,
+        352
+      ],
+      "id": "abeb41f4-06e8-4799-89c2-2a39566a07a0",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.clientEmail }}",
+        "subject": "=Your Proposal from Sourcing Sprints - {{ $json.companyName }}",
+        "emailType": "text",
+        "message": "={{ $json.emailBody }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        528
+      ],
+      "id": "56120a95-2e2c-4957-be72-9bc9d1b0e8af",
+      "name": "Send a message",
+      "webhookId": "a5f71c54-1b65-49ec-82e7-ff5a1d8d7b69",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "77MD3iIHM998Xf1Q",
+          "name": "Abdulkareem gmail"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "app0H4MmpTT7GWBkB",
+          "mode": "list",
+          "cachedResultName": "Proposal Automation",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl38pTCWAILFlmKj",
+          "mode": "list",
+          "cachedResultName": "Proposals",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB/tbl38pTCWAILFlmKj"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Approved": false,
+            "id": "={{ $('Search records').item.json.id }}",
+            "Status": "Sent",
+            "Proposal Link": "=https://docs.google.com/document/d/{{ $('Edit Fields').item.json.documentId }}/edit",
+            "Date Sent": "={{ $now.toFormat('dd LLLL yyyy') }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Proposal.",
+              "displayName": "Proposal.",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Client Email",
+              "displayName": "Client Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date of Call",
+              "displayName": "Date of Call",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Salesperson Name",
+              "displayName": "Salesperson Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Needs Summary",
+              "displayName": "Needs Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Project Scope",
+              "displayName": "Project Scope",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Goals",
+              "displayName": "Goals",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Services",
+              "displayName": "Services",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Pricing",
+              "displayName": "Pricing",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "AI Draft JSON",
+              "displayName": "AI Draft JSON",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Approved",
+                  "value": "Approved"
+                },
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Sent",
+                  "value": "Sent"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Approved",
+              "displayName": "Approved",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Proposal Link",
+              "displayName": "Proposal Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date Sent",
+              "displayName": "Date Sent",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Modified",
+              "displayName": "Last Modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": true
+            },
+            {
+              "id": "Approach",
+              "displayName": "Approach",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        224,
+        528
+      ],
+      "id": "87e2a876-2388-4d0c-b9d9-0a5fd43c1913",
+      "name": "Update record1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "6QARKdeP6VDdYrlr",
+          "name": "Abdulkareem Airtable Personal Access Token account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Schedule Trigger": [
+      {
+        "json": {
+          "timestamp": "2026-07-21T15:15:40.012+01:00",
+          "Readable date": "July 21st 2026, 3:15:40 pm",
+          "Readable time": "3:15:40 pm",
+          "Day of week": "Tuesday",
+          "Year": "2026",
+          "Month": "July",
+          "Day of month": "21",
+          "Hour": "15",
+          "Minute": "15",
+          "Second": "40",
+          "Timezone": "Africa/Lagos (UTC+01:00)"
+        },
+        "pairedItem": {
+          "item": 0
+        }
+      }
+    ]
+  },
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Search records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search records": {
+      "main": [
+        [
+          {
+            "node": "Update record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update record": {
+      "main": [
+        [
+          {
+            "node": "Copy file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Copy file": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Share file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Share file": {
+      "main": [
+        [
+          {
+            "node": "Download file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download file": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Update record1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "H79YXMOUZVHCJvZi",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true,
+    "timeSavedPerExecution": 1
+  },
+  "versionId": "b9281a92-93ea-480c-ad70-0bf5c2c4158e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "704622d319e7ed7caa8f04c4398ea1779abb4352ebb45a47aa175be31e8fb8d4"
+  },
+  "nodeGroups": [],
+  "id": "gV46dtpL0uo2aBtv",
+  "tags": []
+}

@@ -1,0 +1,455 @@
+{
+  "name": "Proposal Generation & Delivery Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1YpGu3mV5locqIMA6vSzCd30JQeir4V79UmGy6kmZiWY",
+          "mode": "list",
+          "cachedResultName": "Proposal Generator Form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YpGu3mV5locqIMA6vSzCd30JQeir4V79UmGy6kmZiWY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1925821485,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1YpGu3mV5locqIMA6vSzCd30JQeir4V79UmGy6kmZiWY/edit#gid=1925821485"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "b17c330e-0932-41c9-9734-501c0b28def1",
+      "name": "Google Sheets Trigger",
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "plB3ki3PvURfepop",
+          "name": "Abdulkareem Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://openrouter.ai/api/v1/chat/completions",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"openai/gpt-4o-mini\",\n  \"messages\": [\n    {\n      \"role\": \"system\",\n      \"content\": \"You are a proposal writer. Given raw sales call notes, expand them into polished, professional proposal copy. Return ONLY valid JSON with these exact keys: introduction, client_needs_summary, scope, approach, goals, deliverables, timeline, pricing, closing. The \\\"approach\\\" field should describe, in 2-3 sentences, the recommended methodology or approach for delivering the solution (distinct from \\\"scope,\\\" which describes what's being built). No markdown, no code fences, no preamble — just the raw JSON object.\"\n    },\n    {\n      \"role\": \"user\",\n      \"content\": \"Client: {{ $json['Client Name'] }} | Company: {{ $json['Company Name'] }} | Needs: {{ $json['Summary of Client\\'s Needs'] }}| Scope: {{ $json['Project Scope'] }} | Goals: {{ $json['Goals & Objectives'] }} | Services: {{ $json['Recommended Services/Deliverables'] }} | Timeline: {{ $json['Proposed Timeline'] }} | Pricing: {{ $json['Estimated Pricing'] }}\"\n    }\n  ],\n  \"temperature\": 0.5\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        208,
+        0
+      ],
+      "id": "aa4d6089-27d7-4f72-af0c-ca6adcf9d25a",
+      "name": "HTTP Request",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "oYbrdXOzqCge7GQU",
+          "name": "Header Auth account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "const raw = $input.item.json.choices[0].message.content;\n\nlet parsed;\ntry {\n  // Strip any accidental markdown fences or stray text before/after the JSON\n  const jsonMatch = raw.match(/\\{[\\s\\S]*\\}/);\n  parsed = JSON.parse(jsonMatch[0]);\n} catch (e) {\n  throw new Error(\"Failed to parse AI JSON output: \" + e.message + \" | Raw: \" + raw);\n}\n\n// Pull the original form fields back in from the trigger node\nconst form = $('Google Sheets Trigger').item.json;\n\nreturn {\n  json: {\n    clientName: form['Client Name'],\n    clientEmail: form['Client Email'],\n    companyName: form['Company Name'],\n   dateOfCall: DateTime.fromFormat(form['Date of Call'], 'dd/MM/yyyy').toISODate(),\n    salespersonName: form['Salesperson Name'],\n    needsSummary: form[\"Summary of Client's Needs\"],\n    projectScope: form['Project Scope'],\n    goals: form['Goals & Objectives'],\n    services: form['Recommended Services/Deliverables'],\n    timeline: form['Proposed Timeline'],\n    pricing: form['Estimated Pricing'],\n    introduction: parsed.introduction,\n    client_needs_summary: parsed.client_needs_summary,\n    scope: parsed.scope,\n    approach: parsed.approach,\n    goals_ai: parsed.goals,\n    deliverables: parsed.deliverables,\n    timeline_ai: parsed.timeline,\n    pricing_ai: parsed.pricing,\n    closing: parsed.closing,\n    aiDraftFull: JSON.stringify(parsed, null, 2)\n  }\n};"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "432b19cd-56ef-42e4-adc0-bafc7df4544b",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "app0H4MmpTT7GWBkB",
+          "mode": "list",
+          "cachedResultName": "Proposal Automation",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tbl38pTCWAILFlmKj",
+          "mode": "list",
+          "cachedResultName": "Proposals",
+          "cachedResultUrl": "https://airtable.com/app0H4MmpTT7GWBkB/tbl38pTCWAILFlmKj"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Approved": false,
+            "Client Name": "={{ $json.clientName }}",
+            "Client Email": "={{ $json.clientEmail }}",
+            "Company Name": "={{ $json.companyName }}",
+            "Date of Call": "={{ $json.dateOfCall }}",
+            "Salesperson Name": "={{ $json.salespersonName }}",
+            "Needs Summary": "={{ $json.client_needs_summary }}",
+            "Project Scope": "={{ $json.scope }}",
+            "Goals": "={{ $json.goals_ai }}",
+            "Services": "={{ $json.deliverables }}",
+            "Timeline": "={{ $json.timeline_ai }}",
+            "Pricing": "={{ $json.pricing_ai }}",
+            "AI Draft JSON": "={{ $json.aiDraftFull }}",
+            "Status": "Pending",
+            "Approach": "={{ $json.approach }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Proposal.",
+              "displayName": "Proposal.",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Client Name",
+              "displayName": "Client Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Client Email",
+              "displayName": "Client Email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date of Call",
+              "displayName": "Date of Call",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Salesperson Name",
+              "displayName": "Salesperson Name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Needs Summary",
+              "displayName": "Needs Summary",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Project Scope",
+              "displayName": "Project Scope",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Goals",
+              "displayName": "Goals",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Services",
+              "displayName": "Services",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Timeline",
+              "displayName": "Timeline",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Pricing",
+              "displayName": "Pricing",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "AI Draft JSON",
+              "displayName": "AI Draft JSON",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Approved",
+                  "value": "Approved"
+                },
+                {
+                  "name": "Pending",
+                  "value": "Pending"
+                },
+                {
+                  "name": "Sent",
+                  "value": "Sent"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Approved",
+              "displayName": "Approved",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Proposal Link",
+              "displayName": "Proposal Link",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Date Sent",
+              "displayName": "Date Sent",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Last Modified",
+              "displayName": "Last Modified",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true,
+              "removed": false
+            },
+            {
+              "id": "Approach",
+              "displayName": "Approach",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        192
+      ],
+      "id": "14380ec7-c8ce-4762-bd0c-18900add377f",
+      "name": "Create a record",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "6QARKdeP6VDdYrlr",
+          "name": "Abdulkareem Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "abdulkareemhajara8@gmail.com",
+        "subject": "=New Proposal Pending Approval - {{ $json.fields['Company Name'] }}",
+        "message": "=A new proposal draft is ready for review.       Client: {{ $json.fields['Client Name'] }}      Company: {{ $json.fields['Company Name'] }}       Review and approve here: https://airtable.com/app0H4MmpTT7GWBkB/tbl38pTCWAILFlmKj/{{ $json.id }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        352,
+        192
+      ],
+      "id": "8b83ed0a-3a5a-42ce-a1a8-7539040cf1b7",
+      "name": "Send a message",
+      "webhookId": "1edd4579-3c45-4cdb-b9d9-8bc430152059",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "77MD3iIHM998Xf1Q",
+          "name": "Abdulkareem gmail"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Create a record",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create a record": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "timeSavedMode": "fixed",
+    "errorWorkflow": "H79YXMOUZVHCJvZi",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": true,
+    "timeSavedPerExecution": 0
+  },
+  "versionId": "92438890-8e33-4cfa-89ff-a283e5454436",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "704622d319e7ed7caa8f04c4398ea1779abb4352ebb45a47aa175be31e8fb8d4"
+  },
+  "nodeGroups": [],
+  "id": "ez5ULTVnBKpKyXtC",
+  "tags": []
+}
