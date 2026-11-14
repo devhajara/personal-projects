@@ -631,7 +631,7 @@
       "type": "@n8n/n8n-nodes-langchain.informationExtractor",
       "typeVersion": 1.2,
       "position": [
-        -384,
+        -320,
         576
       ],
       "id": "351648b4-50e2-4908-8e62-c561e7bbe6ec",
@@ -958,103 +958,7 @@
       "name": "If4"
     }
   ],
-  "pinData": {
-    "Gmail Trigger": [
-      {
-        "json": {
-          "id": "19cf94b0f26e0704",
-          "threadId": "19ccb610dfaa3d1d",
-          "labelIds": [
-            "UNREAD",
-            "IMPORTANT",
-            "SENT",
-            "INBOX"
-          ],
-          "sizeEstimate": 431652,
-          "headers": {
-            "mime-version": "MIME-Version: 1.0",
-            "date": "Date: Tue, 17 Mar 2026 01:56:04 +0100",
-            "message-id": "Message-ID: <CAEL57840RUteaaUSuBTdEAZfLTw=P_SFtDc9GCOv+hxgqhhROg@mail.gmail.com>",
-            "subject": "Subject: invoice",
-            "from": "From: Hajara Abdulkareem <abdulkareemhajara8@gmail.com>",
-            "to": "To: Hajara Abdulkareem <abdulkareemhajara8@gmail.com>",
-            "content-type": "Content-Type: multipart/mixed; boundary=\"0000000000002ce7e6064d2dcdb8\""
-          },
-          "html": "<div dir=\"ltr\"><div dir=\"auto\"></div>\n</div>\n",
-          "text": "\n",
-          "textAsHtml": "<p></p>",
-          "subject": "invoice",
-          "date": "2026-03-17T00:56:04.000Z",
-          "to": {
-            "value": [
-              {
-                "address": "abdulkareemhajara8@gmail.com",
-                "name": "Hajara Abdulkareem"
-              }
-            ],
-            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Hajara Abdulkareem</span> &lt;<a href=\"mailto:abdulkareemhajara8@gmail.com\" class=\"mp_address_email\">abdulkareemhajara8@gmail.com</a>&gt;</span>",
-            "text": "\"Hajara Abdulkareem\" <abdulkareemhajara8@gmail.com>"
-          },
-          "from": {
-            "value": [
-              {
-                "address": "abdulkareemhajara8@gmail.com",
-                "name": "Hajara Abdulkareem"
-              }
-            ],
-            "html": "<span class=\"mp_address_group\"><span class=\"mp_address_name\">Hajara Abdulkareem</span> &lt;<a href=\"mailto:abdulkareemhajara8@gmail.com\" class=\"mp_address_email\">abdulkareemhajara8@gmail.com</a>&gt;</span>",
-            "text": "\"Hajara Abdulkareem\" <abdulkareemhajara8@gmail.com>"
-          },
-          "messageId": "<CAEL57840RUteaaUSuBTdEAZfLTw=P_SFtDc9GCOv+hxgqhhROg@mail.gmail.com>"
-        },
-        "binary": {
-          "attachment_0": {
-            "mimeType": "application/pdf",
-            "fileType": "pdf",
-            "fileExtension": "pdf",
-            "data": "filesystem-v2",
-            "fileName": "2 invoice sample.pdf",
-            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/688136d2-a3ee-4d35-9f91-40a81e569b30",
-            "fileSize": "70.5 kB",
-            "bytes": 70453
-          },
-          "attachment_1": {
-            "mimeType": "application/pdf",
-            "fileType": "pdf",
-            "fileExtension": "pdf",
-            "data": "filesystem-v2",
-            "fileName": "sample_invoice_test.pdf",
-            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/2fe994f1-28e7-44f0-93e0-3a9068ac6c7a",
-            "fileSize": "2.48 kB",
-            "bytes": 2483
-          },
-          "attachment_2": {
-            "mimeType": "application/pdf",
-            "fileType": "pdf",
-            "fileExtension": "pdf",
-            "data": "filesystem-v2",
-            "fileName": "November Invoice - Abubakri Bello (1) (1).pdf",
-            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/7ef0df25-40d6-4386-9b97-ee0d7e4562ae",
-            "fileSize": "70.4 kB",
-            "bytes": 70376
-          },
-          "attachment_3": {
-            "mimeType": "application/pdf",
-            "fileType": "pdf",
-            "fileExtension": "pdf",
-            "data": "filesystem-v2",
-            "fileName": "1st Invoice Sample (1).pdf",
-            "id": "filesystem-v2:workflows/z159jYrndPFcOLpa/executions/temp/binary_data/4d5928e1-996b-462e-84d9-34e5c6692c7e",
-            "fileSize": "171 kB",
-            "bytes": 170794
-          }
-        },
-        "pairedItem": {
-          "item": 0
-        }
-      }
-    ]
-  },
+  "pinData": {},
   "connections": {
     "Gmail Trigger": {
       "main": [
@@ -1332,13 +1236,14 @@
   "settings": {
     "executionOrder": "v1",
     "binaryMode": "separate",
-    "availableInMCP": false
+    "availableInMCP": true
   },
-  "versionId": "38e6e0ff-a45e-4e91-836d-51115217ee83",
+  "versionId": "166dd41c-f9b8-4266-82a8-d88d15b6a691",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "704622d319e7ed7caa8f04c4398ea1779abb4352ebb45a47aa175be31e8fb8d4"
   },
+  "nodeGroups": [],
   "id": "z159jYrndPFcOLpa",
   "tags": [
     {
